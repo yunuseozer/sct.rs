@@ -162,7 +162,9 @@ const SCT_X509_ENTRY: [u8; 2] = [0, 0];
 impl<'a> SCT<'a> {
     fn verify(&self, key: &[u8], cert: &[u8]) -> Result<(), Error> {
         let alg: &ring::signature::VerificationAlgorithm = match self.sig_alg {
+            #[cfg(feature = "ecdsa")]
             ECDSA_SHA256 => &ring::signature::ECDSA_P256_SHA256_ASN1,
+            #[cfg(feature = "ecdsa")]
             ECDSA_SHA384 => &ring::signature::ECDSA_P384_SHA384_ASN1,
             RSA_PKCS1_SHA256 => &ring::signature::RSA_PKCS1_2048_8192_SHA256,
             RSA_PKCS1_SHA384 => &ring::signature::RSA_PKCS1_2048_8192_SHA384,
