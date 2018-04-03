@@ -8,14 +8,24 @@
 //! It is intended to be useful to libraries which perform certificate
 //! validation, OCSP libraries, and TLS libraries.
 
-#![forbid(unsafe_code,
-          unstable_features)]
+#![forbid(unsafe_code)]
+//          unstable_features)]
 #![deny(trivial_casts,
         trivial_numeric_casts,
         missing_docs,
         unused_import_braces,
         unused_extern_crates,
         unused_qualifications)]
+
+#![cfg_attr(all(feature = "mesalock_sgx",
+                not(target_env = "sgx")), no_std)]
+#![cfg_attr(all(target_env = "sgx", target_vendor = "mesalock"), feature(rustc_private))]
+
+#[cfg(all(feature = "mesalock_sgx", not(target_env = "sgx")))]
+#[macro_use]
+extern crate sgx_tstd as std;
+
+use std::prelude::v1::*;
 
 /// Describes a CT log
 ///
@@ -160,6 +170,7 @@ impl<'a> SCT<'a> {
     fn verify(&self, key: &[u8], cert: &[u8]) -> Result<(), Error> {
         let alg: &dyn ring::signature::VerificationAlgorithm = match self.sig_alg {
             ECDSA_SHA256 => &ring::signature::ECDSA_P256_SHA256_ASN1,
+            #[cfg(feature = "ecdsa")]
             ECDSA_SHA384 => &ring::signature::ECDSA_P384_SHA384_ASN1,
             RSA_PKCS1_SHA256 => &ring::signature::RSA_PKCS1_2048_8192_SHA256,
             RSA_PKCS1_SHA384 => &ring::signature::RSA_PKCS1_2048_8192_SHA384,
