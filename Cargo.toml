@@ -10,6 +10,9 @@ homepage = "https://github.com/ctz/sct.rs"
 repository = "https://github.com/ctz/sct.rs"
 categories = ["network-programming", "cryptography"]
 
+[features]
+ecdsa = []
+
 [dependencies]
 ring = "0.14"
 untrusted = "0.6.2"
