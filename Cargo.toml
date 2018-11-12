@@ -15,3 +15,7 @@ ecdsa = []
 [dependencies]
 ring = "0.13.2"
 untrusted = "0.6.2"
+
+[patch.crates-io]
+ring = { git = "https://github.com/mesalock-linux/ring", branch = "bincat-sm" }
+
